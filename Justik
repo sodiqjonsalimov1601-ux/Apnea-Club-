@@ -1,0 +1,21 @@
+using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    public float moveSpeed = 5f;
+    public JoystickController joystick; // Boyagi joystikni shu yerga ulaymiz
+
+    void Update()
+    {
+        Vector3 moveDir = new Vector3(joystick.Horizontal(), 0, joystick.Vertical());
+        
+        if (moveDir != Vector3.zero)
+        {
+            // Harakatlantirish
+            transform.position += moveDir * moveSpeed * Time.deltaTime;
+
+            // Harakat yo'nalishiga qarab burilish (Face direction)
+            transform.forward = moveDir;
+        }
+    }
+}
