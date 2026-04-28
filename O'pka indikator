@@ -1,0 +1,71 @@
+using UnityEngine;
+using UnityEngine.UI; // UI elementlari bilan ishlash uchun
+
+public class OxygenIndicator : MonoBehaviour
+{
+    [Header("Sozlamalar")]
+    public float maxOxygen = 100f; 
+    public float currentOxygen;
+    public float consumptionRate = 2f; // Kislorod kamayish tezligi
+    public float recoveryRate = 10f;   // Suv betida tiklanish tezligi
+
+    [Header("UI Elementlari")]
+    public Image lungImage; // O'pka rasmi (Image component)
+    public Color normalColor = Color.cyan;
+    public Color warningColor = Color.red;
+
+    private bool isSubmerged = true; // Suv ostidami yoki yo'q
+
+    void Start()
+    {
+        currentOxygen = maxOxygen;
+    }
+
+    void Update()
+    {
+        if (isSubmerged)
+        {
+            // Suv ostida kislorodni kamaytirish
+            currentOxygen -= consumptionRate * Time.deltaTime;
+        }
+        else
+        {
+            // Suv betida kislorodni tiklash
+            currentOxygen += recoveryRate * Time.deltaTime;
+        }
+
+        // Kislorod chegarasini ushlash (0 va max orasida)
+        currentOxygen = Mathf.Clamp(currentOxygen, 0, maxOxygen);
+
+        // UI-ni yangilash
+        UpdateUI();
+    }
+
+    void UpdateUI()
+    {
+        // Rasmni to'lish darajasini o'zgartirish (0.0 dan 1.0 gacha)
+        float fillValue = currentOxygen / maxOxygen;
+        lungImage.fillAmount = fillValue;
+
+        // Agar kislorod 25% dan kam qolsa, rangini qizilga o'zgartirish
+        if (fillValue < 0.25f)
+        {
+            lungImage.color = warningColor;
+        }
+        else
+        {
+            lungImage.color = normalColor;
+        }
+    }
+
+    // Suvga kirish va chiqishni tekshirish uchun triggerlar
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("WaterSurface")) isSubmerged = true;
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("WaterSurface")) isSubmerged = false;
+    }
+}
