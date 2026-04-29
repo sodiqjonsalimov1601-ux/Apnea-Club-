@@ -1,0 +1,37 @@
+using UnityEngine;
+using UnityEngine.SceneManagement; // Sahnalar orasida o'tish uchun
+using UnityEngine.UI; // UI elementlari uchun
+
+public class MainMenuManager : MonoBehaviour
+{
+    [Header("Menu Elementlari")]
+    public GameObject startButton;
+    public GameObject character1; // 1-personaj (ko'ylak kiygan)
+    public GameObject character2; // 2-personaj (ko'ylak kiygan)
+    
+    [Header("Effektlar")]
+    public AudioSource clickSound; // Tugma bosilgandagi tovush
+
+    void Start()
+    {
+        // O'yin boshlanganda personajlar chiroyli turishi kerak
+        character1.SetActive(true);
+        character2.SetActive(true);
+    }
+
+    // "START" tugmasi bosilganda ishlaydi
+    public void StartGame()
+    {
+        if (clickSound != null) clickSound.Play();
+        
+        // O'yin sahnasiga o'tish (Sahnangiz nomi "GameScene" bo'lishi kerak)
+        SceneManager.LoadScene("GameScene");
+    }
+
+    // O'yindan chiqish
+    public void QuitGame()
+    {
+        Application.Quit();
+        Debug.Log("O'yindan chiqildi.");
+    }
+}
